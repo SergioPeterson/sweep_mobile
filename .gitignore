@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Expo
+expo-env.d.ts
+.expo/
+
+# Environment
+.env
+.env.local
+
+# Build
+ios/
+android/
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+*.log
+
+# Lock files
+package-lock.json
