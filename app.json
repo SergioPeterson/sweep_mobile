@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "CleaningMarketplace",
-    "slug": "cleaning-marketplace",
-    "version": "1.0.0",
+    "name": "Sweep",
+    "slug": "sweep",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "scheme": "cleaning",
+    "scheme": "sweep",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,14 +17,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cleaningmarketplace.app"
+      "bundleIdentifier": "com.sweep.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#2563eb"
       },
-      "package": "com.cleaningmarketplace.app"
+      "package": "com.sweep.app"
     },
     "web": {
       "bundler": "metro",

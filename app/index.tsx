@@ -5,7 +5,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
-        <Text style={styles.title}>Cleaning Marketplace</Text>
+        <Text style={styles.title}>Sweep</Text>
         <Text style={styles.subtitle}>
           Find trusted cleaners near you
         </Text>
