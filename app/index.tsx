@@ -1,32 +1,37 @@
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, Redirect } from 'expo-router';
+import { useAuth } from '@clerk/clerk-expo';
+import { useAuthStore } from '../lib/stores/authStore';
+import { getDashboardRouteForRole } from '../lib/auth/roles';
 
 export default function HomeScreen() {
+  const { isSignedIn } = useAuth();
+  const { role, isRoleLoaded } = useAuthStore();
+
+  if (isSignedIn && isRoleLoaded && role && role !== 'admin') {
+    const dashboardRoute = getDashboardRouteForRole(role);
+    if (dashboardRoute) {
+      return <Redirect href={dashboardRoute as '/(customer)/search'} />;
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.hero}>
         <Text style={styles.title}>Sweep</Text>
-        <Text style={styles.subtitle}>
-          Find trusted cleaners near you
-        </Text>
+        <Text style={styles.subtitle}>Find trusted cleaners near you</Text>
       </View>
 
       <View style={styles.buttons}>
-        <Link href="/(customer)/search" asChild>
-          <Pressable style={styles.primaryButton}>
-            <Text style={styles.primaryButtonText}>Find a Cleaner</Text>
-          </Pressable>
-        </Link>
-
         <Link href="/(auth)/login" asChild>
-          <Pressable style={styles.secondaryButton}>
-            <Text style={styles.secondaryButtonText}>Log In</Text>
+          <Pressable style={styles.primaryButton}>
+            <Text style={styles.primaryButtonText}>Log In</Text>
           </Pressable>
         </Link>
 
         <Link href="/(auth)/signup" asChild>
-          <Pressable style={styles.textButton}>
-            <Text style={styles.textButtonText}>Create an account</Text>
+          <Pressable style={styles.secondaryButton}>
+            <Text style={styles.secondaryButtonText}>Create an account</Text>
           </Pressable>
         </Link>
       </View>
@@ -84,13 +89,5 @@ const styles = StyleSheet.create({
     color: '#333',
     fontSize: 16,
     fontWeight: '600',
-  },
-  textButton: {
-    padding: 8,
-    alignItems: 'center',
-  },
-  textButtonText: {
-    color: '#2563eb',
-    fontSize: 14,
   },
 });

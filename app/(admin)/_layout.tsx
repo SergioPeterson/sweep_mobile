@@ -3,7 +3,7 @@ import { useAuth } from '@clerk/clerk-expo';
 import { useAuthStore } from '../../lib/stores/authStore';
 import { colors } from '../../lib/constants/colors';
 
-export default function CustomerLayout() {
+export default function AdminLayout() {
   const { isSignedIn } = useAuth();
   const { role, isRoleLoaded } = useAuthStore();
 
@@ -11,8 +11,8 @@ export default function CustomerLayout() {
     return <Redirect href="/(auth)/login" />;
   }
 
-  if (isRoleLoaded && role === 'cleaner') {
-    return <Redirect href="/(cleaner)/dashboard" />;
+  if (isRoleLoaded && role !== 'admin') {
+    return <Redirect href="/(customer)/search" />;
   }
 
   return (
@@ -25,25 +25,21 @@ export default function CustomerLayout() {
       }}
     >
       <Tabs.Screen
-        name="search"
-        options={{ title: 'Find Cleaners', tabBarLabel: 'Home' }}
+        name="dashboard"
+        options={{ title: 'Dashboard', tabBarLabel: 'Dashboard' }}
       />
       <Tabs.Screen
-        name="book"
-        options={{ title: 'Book a Clean', tabBarLabel: 'Book' }}
+        name="users"
+        options={{ title: 'Users', tabBarLabel: 'Users' }}
       />
       <Tabs.Screen
-        name="bookings"
-        options={{ title: 'My Bookings', tabBarLabel: 'Bookings' }}
+        name="disputes"
+        options={{ title: 'Disputes', tabBarLabel: 'Disputes' }}
       />
       <Tabs.Screen
         name="profile"
         options={{ title: 'Profile', tabBarLabel: 'Profile' }}
       />
-      {/* Hidden routes (push targets, not tabs) */}
-      <Tabs.Screen name="cleaner/[id]" options={{ href: null }} />
-      <Tabs.Screen name="cleaner/[id]/book" options={{ href: null }} />
-      <Tabs.Screen name="booking/[id]" options={{ href: null }} />
     </Tabs>
   );
 }

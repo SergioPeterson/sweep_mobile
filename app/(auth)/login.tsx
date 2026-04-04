@@ -1,14 +1,42 @@
-import { View, Text, TextInput, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Pressable, StyleSheet, Alert } from 'react-native';
 import { useState } from 'react';
-import { router } from 'expo-router';
+import { useSignIn } from '@clerk/clerk-expo';
 
 export default function LoginScreen() {
+  const { signIn, setActive, isLoaded } = useSignIn();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    // TODO: Implement authentication
-    router.replace('/(customer)/search');
+  const handleLogin = async () => {
+    if (!isLoaded) {
+      return;
+    }
+
+    if (!email || !password) {
+      Alert.alert('Error', 'Please fill in all fields');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const result = await signIn.create({
+        identifier: email,
+        password,
+      });
+
+      if (result.status === 'complete' && result.createdSessionId) {
+        await setActive({ session: result.createdSessionId });
+      } else {
+        Alert.alert('Error', 'Login could not be completed. Please try again.');
+      }
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : 'Login failed. Please try again.';
+      Alert.alert('Error', message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,9 +61,17 @@ export default function LoginScreen() {
           secureTextEntry
         />
 
-        <Pressable style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Log In</Text>
+        <Pressable
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          <Text style={styles.buttonText}>
+            {loading ? 'Logging in...' : 'Log In'}
+          </Text>
         </Pressable>
+
+        <Text style={styles.hint}>Sign in with your Sweep account</Text>
       </View>
     </View>
   );
@@ -72,9 +108,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
   },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
   buttonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  hint: {
+    textAlign: 'center',
+    color: '#999',
+    fontSize: 12,
+    marginTop: 16,
   },
 });
