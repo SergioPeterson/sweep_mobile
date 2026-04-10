@@ -63,6 +63,36 @@ export default function ProfileScreen() {
             activeOpacity={0.7}
             onPress={() => router.push('/(customer)/settings' as never)}
           >
+            <Text style={styles.menuIcon}>{'\uD83E\uDD16'}</Text>
+            <View style={styles.menuContent}>
+              <Text style={styles.menuLabel}>Agent Access</Text>
+              <Text style={styles.menuSublabel}>
+                Review connected AI clients and approval guardrails
+              </Text>
+            </View>
+            <Text style={styles.menuChevron}>{'>'}</Text>
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+            <Text style={styles.menuIcon}>{'\uD83C\uDFE0'}</Text>
+            <View style={styles.menuContent}>
+              <Text style={styles.menuLabel}>Saved Addresses</Text>
+              <Text style={styles.menuSublabel}>
+                Manage your cleaning locations
+              </Text>
+            </View>
+            <Text style={styles.menuChevron}>{'>'}</Text>
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
+          <TouchableOpacity
+            style={styles.menuItem}
+            activeOpacity={0.7}
+            onPress={() => router.push('/(customer)/settings' as never)}
+          >
             <Text style={styles.menuIcon}>{'\uD83D\uDCB3'}</Text>
             <View style={styles.menuContent}>
               <Text style={styles.menuLabel}>Checkout Settings</Text>
