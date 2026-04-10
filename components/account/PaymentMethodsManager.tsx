@@ -22,6 +22,8 @@ import {
 import { Button, Card } from '@/components/ui';
 
 export function PaymentMethodsManager() {
+  const stripePublishableKey = process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '';
+  const paymentsEnabled = stripePublishableKey !== '';
   const queryClient = useQueryClient();
   const { confirmSetupIntent, loading: confirmingSetupIntent } = useConfirmSetupIntent();
   const paymentMethodsQuery = useQuery({
@@ -149,7 +151,16 @@ export function PaymentMethodsManager() {
         </Card>
       )}
 
-      {setupIntentState ? (
+      {!paymentsEnabled ? (
+        <Card style={styles.emptyCard}>
+          <Text style={styles.emptyTitle}>Stripe is not configured</Text>
+          <Text style={styles.emptyDescription}>
+            Add `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY` to enable in-app card setup.
+          </Text>
+        </Card>
+      ) : null}
+
+      {paymentsEnabled && setupIntentState ? (
         <Card style={styles.addCard}>
           <Text style={styles.addCardTitle}>Add a new card</Text>
           <CardField
@@ -187,13 +198,19 @@ export function PaymentMethodsManager() {
       ) : null}
 
       <TouchableOpacity
-        style={styles.addButton}
+        style={[styles.addButton, !paymentsEnabled && styles.addButtonDisabled]}
         onPress={() => {
+          if (!paymentsEnabled) {
+            return;
+          }
           void createSetupIntentMutation.mutateAsync();
         }}
+        disabled={!paymentsEnabled}
         activeOpacity={0.7}
       >
-        <Text style={styles.addButtonText}>+ Add payment method</Text>
+        <Text style={styles.addButtonText}>
+          {paymentsEnabled ? '+ Add payment method' : 'Stripe setup required'}
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -280,6 +297,9 @@ const styles = StyleSheet.create({
   },
   addButton: {
     paddingVertical: 10,
+  },
+  addButtonDisabled: {
+    opacity: 0.5,
   },
   addButtonText: {
     fontSize: 14,

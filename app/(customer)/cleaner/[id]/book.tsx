@@ -13,7 +13,11 @@ import {
 import { useLocalSearchParams, router } from 'expo-router';
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-expo';
-import { CardField, useConfirmPayment } from '@stripe/stripe-react-native';
+import {
+  CardField,
+  useConfirmPayment,
+  type CardFieldInput,
+} from '@stripe/stripe-react-native';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { colors } from '@/lib/constants/colors';
 import { Button, Card, LoadingScreen, StickyBottomBar } from '@/components/ui';
@@ -978,7 +982,7 @@ export default function CleanerBookScreen() {
                     placeholderColor: colors.muted,
                   }}
                   style={styles.cardField}
-                  onCardChange={(details) => {
+                  onCardChange={(details: CardFieldInput.Details) => {
                     setCardComplete(Boolean(details.complete));
                     setPaymentError(null);
                   }}
