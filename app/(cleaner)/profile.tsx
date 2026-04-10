@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@clerk/clerk-expo';
+import { router } from 'expo-router';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { colors } from '@/lib/constants/colors';
 import { Avatar, Button, Card, LoadingScreen, StickyBottomBar } from '@/components/ui';
@@ -302,6 +303,38 @@ export default function CleanerProfileScreen() {
           )}
         </Card>
 
+        <Card style={styles.utilityCard}>
+          <TouchableOpacity
+            style={styles.utilityRow}
+            activeOpacity={0.7}
+            onPress={() => router.push('/(cleaner)/notifications' as never)}
+          >
+            <View style={styles.utilityCopy}>
+              <Text style={styles.utilityLabel}>Notifications</Text>
+              <Text style={styles.utilitySublabel}>
+                Booking updates, reminders, and payout alerts
+              </Text>
+            </View>
+            <Text style={styles.utilityChevron}>{'>'}</Text>
+          </TouchableOpacity>
+
+          <View style={styles.utilityDivider} />
+
+          <TouchableOpacity
+            style={styles.utilityRow}
+            activeOpacity={0.7}
+            onPress={() => router.push('/(cleaner)/settings' as never)}
+          >
+            <View style={styles.utilityCopy}>
+              <Text style={styles.utilityLabel}>Notification Settings</Text>
+              <Text style={styles.utilitySublabel}>
+                Choose push, email, and SMS preferences
+              </Text>
+            </View>
+            <Text style={styles.utilityChevron}>{'>'}</Text>
+          </TouchableOpacity>
+        </Card>
+
         {/* Sign out */}
         <Button
           title="Sign out"
@@ -536,6 +569,38 @@ const styles = StyleSheet.create({
   },
   stripeButton: {
     alignSelf: 'flex-start',
+  },
+  utilityCard: {
+    marginTop: 16,
+    paddingVertical: 0,
+  },
+  utilityRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 14,
+  },
+  utilityCopy: {
+    flex: 1,
+    gap: 2,
+  },
+  utilityLabel: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.foreground,
+  },
+  utilitySublabel: {
+    fontSize: 12,
+    color: colors.muted,
+  },
+  utilityChevron: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.muted,
+  },
+  utilityDivider: {
+    height: 1,
+    backgroundColor: colors.border,
   },
 
   // Sign out
