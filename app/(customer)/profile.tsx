@@ -58,6 +58,23 @@ export default function ProfileScreen() {
       {/* Menu items */}
       <View style={styles.menuSection}>
         <Card>
+          <TouchableOpacity
+            style={styles.menuItem}
+            activeOpacity={0.7}
+            onPress={() => router.push('/(customer)/settings' as never)}
+          >
+            <Text style={styles.menuIcon}>{'\uD83E\uDD16'}</Text>
+            <View style={styles.menuContent}>
+              <Text style={styles.menuLabel}>Agent Access</Text>
+              <Text style={styles.menuSublabel}>
+                Review connected AI clients and approval guardrails
+              </Text>
+            </View>
+            <Text style={styles.menuChevron}>{'>'}</Text>
+          </TouchableOpacity>
+
+          <View style={styles.menuDivider} />
+
           <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
             <Text style={styles.menuIcon}>{'\uD83C\uDFE0'}</Text>
             <View style={styles.menuContent}>
@@ -71,12 +88,16 @@ export default function ProfileScreen() {
 
           <View style={styles.menuDivider} />
 
-          <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            activeOpacity={0.7}
+            onPress={() => router.push('/(customer)/settings' as never)}
+          >
             <Text style={styles.menuIcon}>{'\uD83D\uDCB3'}</Text>
             <View style={styles.menuContent}>
-              <Text style={styles.menuLabel}>Payment Methods</Text>
+              <Text style={styles.menuLabel}>Checkout Settings</Text>
               <Text style={styles.menuSublabel}>
-                Manage your payment options
+                Cards and notification preferences
               </Text>
             </View>
             <Text style={styles.menuChevron}>{'>'}</Text>
@@ -84,12 +105,16 @@ export default function ProfileScreen() {
 
           <View style={styles.menuDivider} />
 
-          <TouchableOpacity style={styles.menuItem} activeOpacity={0.7}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            activeOpacity={0.7}
+            onPress={() => router.push('/(customer)/notifications' as never)}
+          >
             <Text style={styles.menuIcon}>{'\uD83D\uDD14'}</Text>
             <View style={styles.menuContent}>
               <Text style={styles.menuLabel}>Notifications</Text>
               <Text style={styles.menuSublabel}>
-                Manage your notification preferences
+                Booking reminders and updates
               </Text>
             </View>
             <Text style={styles.menuChevron}>{'>'}</Text>

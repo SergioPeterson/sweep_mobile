@@ -41,9 +41,14 @@ export default function CustomerLayout() {
         options={{ title: 'Profile', tabBarLabel: 'Profile' }}
       />
       {/* Hidden routes (push targets, not tabs) */}
+      <Tabs.Screen
+        name="settings"
+        options={{ href: null, title: 'Account Settings' }}
+      />
       <Tabs.Screen name="cleaner/[id]" options={{ href: null }} />
       <Tabs.Screen name="cleaner/[id]/book" options={{ href: null }} />
       <Tabs.Screen name="booking/[id]" options={{ href: null }} />
+      <Tabs.Screen name="notifications" options={{ href: null }} />
     </Tabs>
   );
 }
