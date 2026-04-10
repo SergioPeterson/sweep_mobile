@@ -44,6 +44,8 @@ export default function CleanerLayout() {
       <Tabs.Screen name="setup" options={{ href: null, headerShown: false }} />
       <Tabs.Screen name="bonuses" options={{ href: null }} />
       <Tabs.Screen name="calendar" options={{ href: null }} />
+      <Tabs.Screen name="settings" options={{ href: null }} />
+      <Tabs.Screen name="notifications" options={{ href: null }} />
     </Tabs>
   );
 }
