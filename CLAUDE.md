@@ -1,16 +1,19 @@
 # Sweep Mobile
 
-Expo 52 + React Native 0.76 with expo-router, Zustand, and React Query.
+This repo is the Expo mobile app for Sweep. It covers customer, cleaner, and admin mobile flows, including agent access controls for MCP.
 
 ## Quick Start
 
 ```bash
 npm install
-npx expo start                      # Dev server
-npx expo export --platform ios      # Verify iOS build
-npx expo export --platform android  # Verify Android build
-npm run test                        # Full test suite
+npx expo start
 ```
+
+Useful local context:
+
+- backend dependency on `3050`
+- Stripe publishable key is required for payment flows
+- the real default branch in this repo is `master`
 
 ## Project Structure
 
@@ -26,28 +29,24 @@ app/
 │   ├── search.tsx         # Cleaner search/browse
 │   ├── bookings.tsx       # Booking history
 │   └── cleaner/[id].tsx   # Cleaner profile + booking
-└── (cleaner)/
-    ├── _layout.tsx        # Cleaner tab navigator (Dashboard, Earnings, Calendar, Profile)
-    ├── dashboard.tsx      # Job overview + stats
-    ├── earnings.tsx       # Earnings breakdown
-    ├── calendar.tsx       # Weekly availability + blocked dates
-    └── profile.tsx        # Profile editing (bio, rate, services, Stripe)
+├── (admin)/               # Admin support routes
+└── (cleaner)/             # Cleaner routes
 
 lib/
-├── api/client.ts          # Axios instance with token interceptor
-├── stores/authStore.ts    # Zustand auth store (expo-secure-store for token persistence)
-└── constants/colors.ts    # Design system color tokens
+├── api/                   # API helpers
+├── auth/                  # Role and auth helpers
+├── stores/                # Zustand stores
+└── mcp/                   # MCP presentation and settings helpers
 ```
 
 ## Conventions
 
-- **Routing**: expo-router file-based routing with route groups — `(auth)`, `(customer)`, `(cleaner)`
-- **Styling**: `StyleSheet.create` only. No NativeWind, no styled-components.
-- **State**: React Query for server state, Zustand for client state, useState for form state
-- **Navigation**: `router.replace()` for auth redirects, `router.push()` for stack navigation
-- **Alerts**: Use `Alert.alert()` for confirmations and error messages
-- **Auth store**: Zustand with expo-secure-store for persisting auth tokens
-- **Tabs**: Each route group with tabs has a `_layout.tsx` using `<Tabs>` from expo-router
+- Routing: expo-router file-based route groups.
+- Styling: `StyleSheet.create` only.
+- State: React Query for server state and Zustand for client-side state.
+- Navigation: use the existing router patterns already established in the app.
+- Auth: role routing depends on the shared known test emails.
+- MCP: keep mobile agent-access behavior aligned with backend and web.
 
 ## Definition of Done (Required)
 
@@ -59,23 +58,19 @@ lib/
   - Avoid duplicating request/response mapping logic across screens.
 - Maintain end-to-end type safety for API interactions and shared contracts (avoid `any`).
 - Before marking work complete, run the full existing automated test suite for this repo (not just newly added or targeted tests); all prior tests must pass.
-- For every code change, create a new branch and open a new PR to merge into `main` unless explicitly instructed otherwise.
-- Never commit or push directly to `main` unless the user explicitly asks for that exception.
-- Before merging a PR, run code review using a fresh reviewer sub-agent; if any blocking issue is found, fix it and run review again with a new fresh reviewer sub-agent.
+- For every code change, create a new branch and open a new PR to merge into `master` unless explicitly instructed otherwise.
+- Never commit or push directly to `master` unless the user explicitly asks for that exception.
+- Before merging a PR, run code review using a fresh reviewer sub-agent; if any blocking issue is found, fix it and run review again with a fresh reviewer sub-agent.
 - Repeat that fix and fresh-review cycle until the latest sub-agent PR review is clean, then merge.
 - After every change, run:
-  - `npm run test`
+  - `bun test`
   - `npx tsc --noEmit`
-  - `npx expo export --platform ios`
-  - `npx expo export --platform android`
-
-## Current State
-
-All screens use inline mock data and simulated API calls. Real API integration pending.
+  - `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dummy npx expo export --platform ios`
+  - `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dummy npx expo export --platform android`
 
 ## Production Guardrails (Required)
 
-- Require pull requests to `main` with required status checks and required approvals before merge.
+- Require pull requests to `master` with required status checks and required approvals before merge.
 - Require Code Owner approval for critical paths (`backend`, `auth`, `payments`, `infra`, and workflow/security configs).
 - Treat AI-generated output as draft input only; human review and accountability are mandatory before merge.
 - CI on every PR must run compile/build validation, the full automated test suite, and static analysis.
