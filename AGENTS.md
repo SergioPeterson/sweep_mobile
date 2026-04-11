@@ -4,6 +4,22 @@ If you are reading this file, also read `CLAUDE.md` and `README.md` in this same
 
 If these files conflict, follow the stricter rule. If older workspace docs say `main`, treat that as `master` for this repo because the real default branch here is `master`.
 
+## Project Context
+
+Sweep is a two-sided home-cleaning marketplace in San Francisco with three core roles:
+
+- customer
+- cleaner
+- admin
+
+Related repos:
+
+- `sweep_webserver` for the backend API
+- `sweep_web` for the Next.js web app
+- `@sweep/shared` for shared contracts and schemas
+
+Cross-repo flows like auth, booking, notifications, and MCP agent access should stay aligned with backend contracts and web behavior.
+
 ## Repo Snapshot
 
 This repo owns the Sweep Expo mobile app:
@@ -26,6 +42,22 @@ The app depends on:
 - Clerk publishable key
 - Stripe publishable key for payment flows
 
+## Shared Testing Context
+
+The team uses three shared manual QA accounts:
+
+- admin: `sergiopeterson.dev@gmail.com`
+- cleaner: `sergiopeter2020@gmail.com`
+- customer: `sergiopeter2016@gmail.com`
+
+Passwords are managed in Clerk, not in the repo.
+
+Important mobile nuance:
+
+- role routing currently depends on those exact emails
+- if role behavior looks wrong, confirm the signed-in email first
+- this repo does not currently have a full Detox-style E2E harness, so most verification is tests plus simulator or export smoke checks
+
 ## Important Paths
 
 - `app/` contains expo-router routes and layouts
@@ -43,6 +75,7 @@ The app depends on:
 - Keep API mapping logic in helpers instead of burying it inside screens.
 - Keep mobile MCP behavior aligned with backend and web.
 - Role routing depends on the known shared test emails.
+- Clerk and Stripe publishable keys are required for many real flows.
 
 ## Definition Of Done
 
