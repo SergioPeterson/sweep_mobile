@@ -1,95 +1,114 @@
 # Sweep Mobile
 
-Mobile application for Sweep, a two-sided marketplace connecting customers with independent cleaners in San Francisco. Built with Expo 52 and React Native 0.76.
+This repo is the Expo mobile app for Sweep. It covers customer, cleaner, and admin mobile flows, including agent access controls for MCP.
 
-## Tech Stack
+## Stack
 
-- **Framework**: [Expo 52](https://expo.dev) + [React Native 0.76](https://reactnative.dev)
-- **Routing**: [expo-router](https://docs.expo.dev/router/introduction/) (file-based)
-- **Auth**: [Clerk](https://clerk.com) (`@clerk/clerk-expo`) + [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/)
-- **State**: [React Query](https://tanstack.com/query) (server state) + [Zustand](https://zustand-demo.pmnd.rs) (client state)
+- Expo 52
+- React Native 0.76
+- expo-router
+- Clerk Expo
+- React Query
+- Zustand
+- Stripe React Native
 
-## Prerequisites
+## Quick Start
 
-- [Node.js](https://nodejs.org) (v20+)
-- [Expo CLI](https://docs.expo.dev/get-started/installation/) (`npx expo`)
-- iOS Simulator (macOS) or Android Emulator, or [Expo Go](https://expo.dev/go) on a physical device
-- Running backend API (default: `http://localhost:3050`)
-
-## Getting Started
-
-### 1. Install dependencies
+1. Install dependencies.
 
 ```bash
 npm install
 ```
 
-### 2. Set up environment variables
+2. Add the `.env` file you were given.
 
-Create a `.env` file:
+Minimum useful local variables:
 
 ```env
 EXPO_PUBLIC_WEB_URL=http://localhost:3000
 EXPO_PUBLIC_API_URL=http://localhost:3050
-EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_your_key_here
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
+EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
-### 3. Start the dev server
+3. Start Expo.
 
 ```bash
 npx expo start
 ```
 
-Then press:
-- `i` — open iOS Simulator
-- `a` — open Android Emulator
-- Scan QR code — open in Expo Go on device
+Then use one of:
 
-## Scripts
+- `i` for iOS Simulator
+- `a` for Android Emulator
+- Expo Go on a real device
 
-| Command | Description |
-|---------|-------------|
-| `npx expo start` | Start Expo dev server |
+## What This Repo Owns
+
+- Mobile auth and role routing
+- Customer search, booking, and booking management
+- Cleaner dashboard, calendar, earnings, and profile flows
+- Admin route group support
+- Customer agent access controls and approvals
+
+## Code Map
+
+| Path | What lives there |
+|------|------------------|
+| `app/` | expo-router routes and layouts |
+| `app/(customer)/` | Customer routes |
+| `app/(cleaner)/` | Cleaner routes |
+| `app/(admin)/` | Admin routes |
+| `components/` | Shared account, booking, notifications, and UI components |
+| `components/account/AgentAccessSection.tsx` | MCP settings UI |
+| `lib/api/` | API clients |
+| `lib/auth/` | Role and auth helpers |
+| `lib/stores/` | Zustand stores |
+| `lib/mcp/` | MCP presentation and settings helpers |
+
+## Useful Commands
+
+| Command | What it does |
+|---------|--------------|
+| `npx expo start` | Start the Expo dev server |
 | `npx expo start --ios` | Start and open iOS Simulator |
 | `npx expo start --android` | Start and open Android Emulator |
-| `npx expo export --platform ios` | Verify iOS build |
-| `npx expo export --platform android` | Verify Android build |
-| `npm run test` | Run test suite |
+| `npx expo export --platform ios` | Smoke-test the iOS bundle output |
+| `npx expo export --platform android` | Smoke-test the Android bundle output |
+| `bun test` | Run the mobile test suite |
+| `npx tsc --noEmit` | Typecheck the app |
 
-## Project Structure
+## Manual QA Accounts
 
+Use these exact emails for role-based testing:
+
+| Role | Email |
+|------|-------|
+| Admin | `sergiopeterson.dev@gmail.com` |
+| Cleaner | `sergiopeter2020@gmail.com` |
+| Customer | `sergiopeter2016@gmail.com` |
+
+Important:
+
+- Mobile currently hardcodes role mapping for those emails in `lib/auth/roles.ts`.
+- Passwords are managed in Clerk, not in the repo.
+
+## Testing
+
+Before handing off a change:
+
+```bash
+bun test
+npx tsc --noEmit
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dummy npx expo export --platform ios
+EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_dummy npx expo export --platform android
 ```
-app/
-├── _layout.tsx            # Root layout
-├── index.tsx              # Entry redirect
-├── (auth)/
-│   ├── login.tsx          # Email/password login
-│   └── signup.tsx         # Registration with role selector
-├── (customer)/
-│   ├── _layout.tsx        # Customer tab navigator
-│   ├── search.tsx         # Cleaner search/browse
-│   ├── bookings.tsx       # Booking history
-│   └── cleaner/[id].tsx   # Cleaner profile + booking
-└── (cleaner)/
-    ├── _layout.tsx        # Cleaner tab navigator
-    ├── dashboard.tsx      # Job overview + stats
-    ├── earnings.tsx       # Earnings breakdown
-    ├── calendar.tsx       # Weekly availability
-    └── profile.tsx        # Profile editing
 
-lib/
-├── api/client.ts          # Axios with token interceptor
-├── stores/authStore.ts    # Zustand auth store (secure token persistence)
-└── constants/colors.ts    # Design system tokens
-```
+Right now there is not a full mobile end-to-end harness like Playwright or Detox in this repo, so most verification is a mix of automated tests plus simulator or device smoke checks.
 
-## Conventions
+## Day-One Gotchas
 
-- **Styling**: `StyleSheet.create` only — no NativeWind, no styled-components
-- **Navigation**: `router.replace()` for auth redirects, `router.push()` for stack navigation
-- **Alerts**: `Alert.alert()` for confirmations and errors
-- **Tabs**: Each route group uses `<Tabs>` from expo-router in its `_layout.tsx`
-
-## License
-
-Private — All rights reserved.
+- The mobile app expects the backend on port `3050`.
+- Booking payment flows need `EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY`.
+- If role routing looks wrong, first confirm you are signed in with one of the three shared testing emails above.
+- Stick to `StyleSheet.create` for styling in this codebase.
